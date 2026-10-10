@@ -43,6 +43,15 @@ describe("対象判定(FR-1)", () => {
 		expect(isTarget("Foo/sub/a.md", null, { ...RULE, targetFolders: ["Foo\\sub/"] })).toBe(true);
 		expect(isTarget("a.md", null, { ...RULE, targetFolders: [""] })).toBe(false);
 	});
+	it("フォルダが未設定(空・/)なら、vault の直下や全体には当たらず、rf_target のあるノートだけが対象", () => {
+		for (const unset of ["", " ", "/"]) {
+			const rule = { targetFolders: [unset], excludeFolders: [unset], cliJsonFolder: unset };
+			expect(isTarget("a.md", null, rule)).toBe(false);
+			expect(isTarget("Foo/a.md", null, rule)).toBe(false);
+			expect(isTarget("Foo/a.md", { rf_target: "foo" }, rule)).toBe(true);
+		}
+		expect(isTarget("Foo/a.md", null, { targetFolders: [], excludeFolders: [], cliJsonFolder: "" })).toBe(false);
+	});
 });
 
 describe("調べた日(FR-2)", () => {

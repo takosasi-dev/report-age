@@ -97,7 +97,8 @@ export default class ReportAgePlugin extends Plugin {
 		this.cli = cli;
 		if (notify) {
 			new Notice(cli.kind === "ok" ? S.noticeLoaded(cli.fileName, cli.items.length)
-				: cli.kind === "none" ? S.noticeNoCli(this.settings.cliJsonFolder) : S.noticeCliBroken(cli.fileName, cli.reason));
+				: cli.kind !== "none" ? S.noticeCliBroken(cli.fileName, cli.reason)
+				: this.settings.cliJsonFolder === "" ? S.noticeCliUnset : S.noticeNoCli(this.settings.cliJsonFolder));
 		}
 		this.refresh();
 	}

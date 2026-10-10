@@ -1,6 +1,6 @@
 {
 	"name": "report-age",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Show when a research note was written, how old it is, and whether it needs a new survey. Read-only.",
 	"main": "main.js",
 	"type": "module",

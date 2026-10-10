@@ -1,4 +1,4 @@
-// 設定の型・既定値(§9.2。依頼者の vault のフォルダ名はここだけに書く)・読み込みの補い。obsidian を import しない(テストで読む)。
+// 設定の型・既定値(§9.2。vault に固有のフォルダは既定では空 = 未設定で、使う人が設定で入れる)・読み込みの補い。obsidian を import しない(テストで読む)。
 // 欠けた項目は既定値で埋め、schemaVersion が違えば既定値で動かす(呼び手が Notice を出し、data.json は書き換えない)。
 import { normPath } from "./age";
 
@@ -16,13 +16,13 @@ export interface Settings {
 
 export const DEFAULTS: Settings = {
 	schemaVersion: 1,
-	// 仮決め(§8.4・Q-10): 2026-08-17 に一括で作られ、名前が日付で始まる3フォルダ。FPS は日付の無いノートが多いので入れていない
-	targetFolders: ["レポート/調査レポート/OSS調査", "レポート/調査レポート/ゲーム別OSS調査", "レポート/調査レポート/生成AI調査"],
+	// 依頼者の決定(2026-10-10): フォルダの3つは空 = 未設定(§9.2 の既定値とは違う。元の値は NOTES.md)
+	targetFolders: [],                             // 空のあいだは、rf_target のあるノートだけが対象
 	excludeFolders: [],
 	dateKeys: ["rf_surveyed_on", "作成日"],          // D-9 の既定(Q-11)
 	useFileNameDate: true,
-	cliJsonFolder: "レポート/調査レポート/_freshness",  // CLI の config.json の output_dir
-	cliFileBase: "レポート/調査レポート",              // CLI は file を「対象フォルダの1つ上」からの相対で書く(§8.2・Q-3)
+	cliJsonFolder: "",                             // 空のあいだは、CLI の結果を読まない
+	cliFileBase: "",                               // 空なら、file を vault からの相対パスとして読む
 	reviewAfterDays: null,                         // D-18: 既定は空(出さない)
 	showBand: true,
 };

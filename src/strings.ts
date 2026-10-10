@@ -70,13 +70,14 @@ export const S = {
 	// Notice
 	noticeLoaded: (fileName: string, n: number) => `CLI の結果を読みました: ${fileName}(${n} 件)`,
 	noticeNoCli: (folder: string) => `CLI の結果がありません: ${folder}`,
+	noticeCliUnset: "CLI の結果のフォルダが未設定です。設定 → Report Age で指定してください",
 	noticeCliBroken: (fileName: string, reason: string) => `CLI の結果が読めません: ${fileName}(${reason})`,
 	noticeSettings: "Report Age: 設定(data.json)を読めないか版が違うため、既定値で動きます。data.json は書き換えません。",
 	noticeLocked: "Report Age: 設定は保存されません(data.json を読めなかったため。直すか消してから読み込み直してください)。",
 
 	// 設定(§9.2)
 	setTargetFolders: "対象フォルダ",
-	setTargetFoldersDesc: "この配下の md に帯を出します。vault からの相対パスを1行に1つ。frontmatter に rf_target があるノートは、ここに無くても対象です。",
+	setTargetFoldersDesc: "この配下の md に帯を出します。vault からの相対パスを1行に1つ。frontmatter に rf_target があるノートは、ここに無くても対象です。未設定(空)のあいだは、そのノートだけが対象です(例: Reports/research)。",
 	setExcludeFolders: "除外フォルダ",
 	setExcludeFoldersDesc: "この配下は対象から外します。1行に1つ。CLI の結果のフォルダの配下は、書かなくても外れます。",
 	setShowBand: "本文の先頭に帯を出す",
@@ -91,7 +92,7 @@ export const S = {
 	errReviewAfterDays: "空か、1 以上の整数を入れてください",
 	setHeadingCli: "CLI(ReportFreshness)の結果",
 	setCliJsonFolder: "CLI の結果のフォルダ",
-	setCliJsonFolderDesc: "check が YYYY-MM-DD.json を書くフォルダ。名前が最も新しい1本だけを読みます。",
+	setCliJsonFolderDesc: "check が YYYY-MM-DD.json を書くフォルダ。名前が最も新しい1本だけを読みます。未設定(空)のあいだは、CLI の結果を読みません(例: Reports/_freshness)。",
 	setCliFileBase: "CLI の結果の file の基準フォルダ",
-	setCliFileBaseDesc: "JSON の file は、このフォルダからの相対パスとして読みます(CLI の対象フォルダの1つ上)。",
+	setCliFileBaseDesc: "JSON の file は、このフォルダからの相対パスとして読みます(CLI の対象フォルダの1つ上)。空なら、vault からの相対パスとして読みます(例: Reports)。",
 };

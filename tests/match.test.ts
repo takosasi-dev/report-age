@@ -1,7 +1,7 @@
 // 項目の対応(FR-6・AC-11): cliFileBase + "/" + file を整えた物が、ノートのパス(NFC)と一致するか。
 import { describe, expect, it } from "vitest";
-import { matchItems, readRecord, verdict } from "../src/age";
-import { BASE, cli, item, NOTE, stamped } from "./fixtures";
+import { matchItems, parseCliJson, readRecord, verdict } from "../src/age";
+import { BASE, cli, cliText, item, JSON_NAME, NOTE, stamped } from "./fixtures";
 
 const itemsOf = (c: ReturnType<typeof cli>) => (c.kind === "ok" ? c.items : []);
 
@@ -21,6 +21,10 @@ describe("項目の対応(FR-6)", () => {
 	});
 	it("基準フォルダの末尾の / と、file の先頭の / は整える", () => {
 		expect(matchItems(itemsOf(cli([item({ file: "/oss/Foo/2026-08-17_Foo_調査.md" })])), NOTE)).toHaveLength(1);
+	});
+	it("基準フォルダが空なら、file を vault からの相対パスとして読む", () => {
+		const c = parseCliJson(cliText([item({ file: NOTE })]), JSON_NAME, "");
+		expect(matchItems(itemsOf(c), NOTE)).toHaveLength(1);
 	});
 	it("ほかのノートの項目・前方だけ同じパスは一致しない", () => {
 		const c = cli([item({ file: "oss/Foo/2026-08-17_Foo_調査.md.bak" }), item({ file: "oss/FooBar/2026-08-17_Foo_調査.md" })]);

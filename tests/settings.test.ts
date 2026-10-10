@@ -9,6 +9,17 @@ describe("設定の補い(§9.2)", () => {
 		settings.targetFolders.push("x");
 		expect(DEFAULTS.targetFolders).not.toContain("x");
 	});
+	it("vault に固有のフォルダは、既定では空(未設定)", () => {
+		expect([DEFAULTS.targetFolders, DEFAULTS.cliJsonFolder, DEFAULTS.cliFileBase]).toEqual([[], "", ""]);
+	});
+	it("保存してあるフォルダはそのまま生きる。空・空白だけ・/ は未設定(空)になる", () => {
+		const saved = { targetFolders: ["Reports/research"], cliJsonFolder: "Reports\\_freshness/", cliFileBase: "Reports" };
+		expect(normalizeSettings(saved).settings).toEqual({ ...DEFAULTS, targetFolders: ["Reports/research"], cliJsonFolder: "Reports/_freshness", cliFileBase: "Reports" });
+		for (const unset of ["", " ", "/"]) {
+			const { settings } = normalizeSettings({ targetFolders: [], cliJsonFolder: unset, cliFileBase: unset });
+			expect([settings.targetFolders, settings.cliJsonFolder, settings.cliFileBase]).toEqual([[], "", ""]);
+		}
+	});
 	it("欠けた項目・型の違う項目は既定値で埋める", () => {
 		const { settings, mismatch } = normalizeSettings({ schemaVersion: 1, targetFolders: ["A\\B/", " "], showBand: false, dateKeys: "作成日", reviewAfterDays: 30 });
 		expect(mismatch).toBe(false);

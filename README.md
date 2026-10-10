@@ -23,7 +23,7 @@
 # ある道具の調査
 ```
 
-- **対象になるノート**: 設定の「対象フォルダ」の配下の md と、プロパティに `rf_target` というキーがある md。既定の対象フォルダは作者の vault の名前なので、**自分の vault のフォルダに書き換えてください**
+- **対象になるノート**: 設定の「対象フォルダ」の配下の md と、プロパティに `rf_target` というキーがある md。入れた直後の「対象フォルダ」は空(未設定)なので、**最初に自分の vault のフォルダを入れてください**(下の「入れたら最初に設定する」)
 - **調べた日**: 設定の「調べた日に使う frontmatter のキー」(既定は `rf_surveyed_on`・`作成日`)を上から順に見て、`YYYY-MM-DD` で始まる実在の日付を最初に採ります。読めなければ、ファイル名の先頭の日付(`2026-01-15_ある道具の調査.md` の形)を採ります。どれも無ければ `調査日 不明` と出ます
 - 日付だけを出したいなら、準備はこれで終わりです。下の「結果のファイル」は、再調査の判定まで出したい人向けです
 
@@ -41,7 +41,7 @@ rf_surveyed_on: 2026-01-15
 
 `rf_version` は調べたときの版で、文字として書きます(引用符で囲む)。`rf_surveyed_on` は調べた日。`rf_registry`・`rf_last_checked` は、あれば詳細の窓に出るだけです。
 
-結果のファイルは、設定の「CLI の結果のフォルダ」の直下に `YYYY-MM-DD.json` の名前で置きます。読むのは、名前が最も新しい 1 本だけです。
+結果のファイルは、設定の「CLI の結果のフォルダ」の直下に `YYYY-MM-DD.json` の名前で置きます。読むのは、名前が最も新しい 1 本だけです。このフォルダも入れた直後は空(未設定)で、入れるまでは結果を読みません。
 
 ```json
 {
@@ -57,7 +57,7 @@ rf_surveyed_on: 2026-01-15
 |---|---|---|---|
 | `checked_at` | 文字 | 必須 | 確かめた日時。`YYYY-MM-DD` で始まること(先頭の日付だけ使う) |
 | `items` | 配列 | 必須 | ノート 1 本につき 1 件 |
-| `items[].file` | 文字 | 必須 | ノートのパス。設定の「CLI の結果の file の基準フォルダ」からの相対。無い項目は読まずに捨てる |
+| `items[].file` | 文字 | 必須 | ノートのパス。設定の「CLI の結果の file の基準フォルダ」からの相対(その設定が空なら vault からの相対)。無い項目は読まずに捨てる |
 | `items[].fetch_status` | 文字 | 必須 | 最新版を取れたか。`ok` と `offline_prev`(前に取った値)は判定に進む。`skipped` は「判定なし」。ほかの文字は「不明」 |
 | `items[].diff_kind` | 文字か null | 必須 | 版の差の種類。`same`・`patch`・`minor`・`major` は判定に進む。`reversed` は「要確認」。ほかと null は「不明」 |
 | `items[].stale` | 真偽 | 必須 | 古くなったか。true で「要」、false で「不要」 |
@@ -77,13 +77,23 @@ rf_surveyed_on: 2026-01-15
 ### 手で入れる
 [Releases](https://github.com/takosasi-dev/report-age/releases) から `main.js`・`manifest.json`・`styles.css` を落とし、vault の `.obsidian/plugins/report-age/` に置いて、コミュニティプラグインの一覧で有効にします。
 
+### 入れたら最初に設定する
+
+フォルダの設定は、入れた直後は全部空(未設定)です。設定 → Report Age で、自分の vault に合わせて入れます。
+
+| 項目 | 入れる物 | 入れるまでの動き |
+|---|---|---|
+| 対象フォルダ | 調査メモを置いているフォルダ。1行に1つ(例: `Reports/research`) | プロパティに `rf_target` があるノートにだけ帯が出る。ほかのノートには出ない(vault 全体が対象になることはない) |
+| CLI の結果のフォルダ | 結果の `YYYY-MM-DD.json` を置くフォルダ(例: `Reports/_freshness`)。再調査の判定を出す人だけ | 結果を読まない。判定は `再調査: 判定なし(CLI の結果なし)` |
+| CLI の結果の file の基準フォルダ | JSON の `file` の基準にするフォルダ(例: `Reports`)。同上 | `file` を vault からの相対パスとして読む |
+
 ## 使い方
 
 ### コマンド
 | コマンドパレットに出る名前 | すること |
 |---|---|
 | Report Age: 調査レポートの鮮度を表示 | 開いているノートの詳細の窓を出す。対象のノートを開いているときだけコマンドパレットに出る |
-| Report Age: CLI の結果を読み直す | 結果のファイルを読み直し、`CLI の結果を読みました: <ファイル名>(N 件)` と知らせる。無ければ `CLI の結果がありません: <フォルダ>`、読めなければ `CLI の結果が読めません: <ファイル名>(<理由>)` |
+| Report Age: CLI の結果を読み直す | 結果のファイルを読み直し、`CLI の結果を読みました: <ファイル名>(N 件)` と知らせる。無ければ `CLI の結果がありません: <フォルダ>`、読めなければ `CLI の結果が読めません: <ファイル名>(<理由>)`、「CLI の結果のフォルダ」が未設定なら `CLI の結果のフォルダが未設定です。設定 → Report Age で指定してください` |
 
 既定のホットキーはありません。
 
@@ -120,16 +130,16 @@ rf_surveyed_on: 2026-01-15
 ## 設定
 | 項目 | 既定 | 内容 |
 |---|---|---|
-| 対象フォルダ | `レポート/調査レポート/OSS調査`・`レポート/調査レポート/ゲーム別OSS調査`・`レポート/調査レポート/生成AI調査`(作者の vault の名前。書き換える) | この配下の md に帯を出す。vault からの相対パスを1行に1つ。frontmatter に `rf_target` があるノートは、ここに無くても対象 |
+| 対象フォルダ | 空(未設定) | この配下の md に帯を出す。vault からの相対パスを1行に1つ(例: `Reports/research`)。frontmatter に `rf_target` があるノートは、ここに無くても対象。未設定のあいだは、そのノートだけが対象 |
 | 除外フォルダ | 空 | この配下は対象から外す。1行に1つ。CLI の結果のフォルダの配下は、書かなくても外れる |
 | 本文の先頭に帯を出す | ON | 切ると、コマンドで開く詳細だけになる |
 | 調べた日に使う frontmatter のキー | `rf_surveyed_on`・`作成日` | 上から順に見て、最初に読めた日付を使う。1行に1つ |
 | ファイル名の先頭の日付を使う | ON | 上のキーで読めなかったとき、ファイル名の先頭の YYYY-MM-DD を調べた日にする |
 | 目安の日数 | 空 | 経過日数がこの数以上なら、帯の末尾に「目安 N 日超え」を足す。空なら出さない。判定のラベルは変えない |
-| CLI の結果のフォルダ | `レポート/調査レポート/_freshness`(作者の vault の名前。書き換える) | 結果の `YYYY-MM-DD.json` を置くフォルダ。名前が最も新しい1本だけを読む |
-| CLI の結果の file の基準フォルダ | `レポート/調査レポート`(同上) | JSON の `file` を、このフォルダからの相対パスとして読む |
+| CLI の結果のフォルダ | 空(未設定) | 結果の `YYYY-MM-DD.json` を置くフォルダ(例: `Reports/_freshness`)。名前が最も新しい1本だけを読む。未設定のあいだは結果を読まない |
+| CLI の結果の file の基準フォルダ | 空 | JSON の `file` を、このフォルダからの相対パスとして読む(例: `Reports`)。空なら vault からの相対パスとして読む |
 
-設定画面の 3 つ目の組の見出しには、作者の手元の道具の名前がそのまま出ます。
+フォルダの欄は、空に戻すと未設定に戻ります(`/` だけを入れても未設定です。vault の直下を指すことはできません)。設定画面の 3 つ目の組の見出しには、作者の手元の道具の名前がそのまま出ます。
 
 ## 安全のための決まり
 - ノートは 1 つも書き換えません。帯はエディタの飾りで、文書の文字には入りません。プロパティも本文も変えません
@@ -139,10 +149,11 @@ rf_surveyed_on: 2026-01-15
 - クリップボードには書きません
 
 ## 動作確認の状況
-- 版 0.1.0。Windows の Obsidian 1.14.4 で動作を確認(対象フォルダのノートに帯が出る・押すと詳細の窓が開く・対象外のノートには出ない)
+- 版 0.1.1。Windows の Obsidian 1.14.4 で動作を確認(対象フォルダのノートに帯が出る・押すと詳細の窓が開く・対象外のノートには出ない)
 - iPhone・Android の実機は未確認(モバイル表示のエミュレーションで読み込みと表示まで確認)
 - **結果のファイル(JSON)がある状態での表示は、実機では未確認です。** 判定の対応(上の表)はテストで確かめてあります
 - 閲覧モードで帯が出ないこと、プロパティのあるノートでの帯の位置も未確認です
+- フォルダが未設定のとき(0.1.1 で既定を空にした)に「CLI の結果を読み直す」で案内の知らせが出ることは、Obsidian の中でも確かめました。対象フォルダが空のときに `rf_target` のあるノートだけに帯が出ることは、テストで確かめただけです
 
 ## 分かっている限界
 - 帯が出るのは編集モード(ライブプレビュー・ソース)だけです。閲覧モード・ホバーのプレビュー・埋め込みには出ません。閲覧モードでは、コマンドで詳細の窓を開いて見ます
@@ -168,9 +179,9 @@ MIT。[LICENSE](LICENSE) を見てください。
 
 ## English summary
 **Report Age** shows a one-line band at the top of a research note: when it was surveyed, how many days ago, and whether it needs a new survey.
-- Target notes: Markdown files under the folders you list in settings, or any note with an `rf_target` property. The default folders are the author's own; change them.
+- Target notes: Markdown files under the folders you list in settings, or any note with an `rf_target` property. **No folder is set by default: fill in "対象フォルダ" (target folders, e.g. `Reports/research`) first.** Until then only notes with `rf_target` get a band; the whole vault is never targeted.
 - The survey date comes from frontmatter keys you choose (default `rf_surveyed_on`, then `作成日`), then from a `YYYY-MM-DD` prefix of the file name. File modification time is never used.
-- The "needs a new survey" verdict is optional. It is copied from a JSON file (`YYYY-MM-DD.json`: `checked_at`, `items[]` with `file`, `surveyed_version`, `latest_version`, `diff_kind`, `stale`, `fetch_status`) written by an external tool. The author's tool is not public; without such a file the band shows the date and age only.
+- The "needs a new survey" verdict is optional. It is copied from a JSON file (`YYYY-MM-DD.json`: `checked_at`, `items[]` with `file`, `surveyed_version`, `latest_version`, `diff_kind`, `stale`, `fetch_status`) written by an external tool. The author's tool is not public; without such a file the band shows the date and age only. The result folder is also empty by default and nothing is read until you set it.
 - The plugin never compares versions itself and never reports "no survey needed" when the result file is broken, mismatched, or a fetch failed.
 - Read-only: the band is an editor decoration and is not part of the file. Writes only its own `data.json`. No network, no clipboard, no Node.js or Electron APIs.
 - The band appears in editing views only (Live Preview and Source mode); in Reading view use the command to open the details.

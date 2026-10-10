@@ -47,10 +47,11 @@ export class ReportAgeSettingTab extends PluginSettingTab {
 			case "targetFolders": case "excludeFolders": s[key] = cleanList(text.split("\n")).map((x) => normalizePath(x)); break;
 			case "dateKeys": s.dateKeys = cleanList(text.split("\n")); break;
 			case "showBand": case "useFileNameDate": s[key] = value === true; break;
-			case "cliJsonFolder": case "cliFileBase":
-				if (text.trim() === "") return;            // 空にはしない(前の値のまま)
-				s[key] = normalizePath(text.trim());
+			case "cliJsonFolder": case "cliFileBase": {
+				const path = normalizePath(text.trim());
+				s[key] = path === "/" ? "" : path;         // 空と "/" は未設定(normalizePath("") は "/")
 				break;
+			}
 			case "reviewAfterDays": {
 				const days = parseReviewDays(text);
 				if (days === undefined) return;            // validate で止まる。念のため保存しない

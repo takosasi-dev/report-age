@@ -26,8 +26,8 @@ describe("src/ に無いはずの物", () => {
 	it("AC-9 ファイルの中身を読むのは cliResults.ts だけ(INV-9)", () => {
 		expect(hits(/cachedRead\(|\.read\(/)).toEqual(["cliResults.ts"]);
 	});
-	it("AC-19 依頼者のフォルダ名は settings.ts だけ(§9.2)", () => {
-		expect(hits(/レポート\/調査レポート/)).toEqual(["settings.ts"]);
+	it("AC-19 依頼者のフォルダ名は src/ に無い(既定は空。使う人が設定で入れる)", () => {
+		expect(hits(/レポート\/調査レポート/)).toEqual([]);
 	});
 	it("純関数のファイルは obsidian を import しない(D-3)", () => {
 		for (const name of ["age.ts", "settings.ts", "strings.ts"]) expect(sources.get(name)).not.toMatch(/from\s+['"]obsidian['"]/);

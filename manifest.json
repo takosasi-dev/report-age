@@ -1,7 +1,7 @@
 {
 	"id": "report-age",
 	"name": "Report Age",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"minAppVersion": "1.14.4",
 	"description": "Show when a research note was written, how old it is, and whether it needs a new survey. Read-only.",
 	"author": "takosasi-dev",
