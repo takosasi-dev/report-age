@@ -1,0 +1,51 @@
+/* Report Age: 本文の先頭の帯と詳細モーダル。色は Obsidian の CSS 変数だけで指定する(§9.4) */
+
+/* block widget は上下の margin を持たせない(CM6 の高さの測り方が狂うため)。間隔は padding で取る */
+.reportage-band {
+	padding: var(--size-2-2) var(--size-4-2);
+	border-left: 3px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background-color: var(--background-secondary);
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+	line-height: var(--line-height-tight);
+	cursor: pointer;
+	user-select: none;
+}
+
+.reportage-band:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+.reportage-need {
+	border-left-color: var(--color-red);
+	color: var(--text-normal);
+}
+
+.reportage-ok {
+	border-left-color: var(--color-green);
+}
+
+.reportage-check {
+	border-left-color: var(--color-orange);
+	color: var(--text-normal);
+}
+
+.reportage-unknown {
+	border-left-color: var(--color-yellow);
+}
+
+.reportage-none {
+	border-left-color: var(--background-modifier-border);
+}
+
+.reportage-modal h4 {
+	margin: var(--size-4-3) 0 var(--size-2-2);
+}
+
+.reportage-line {
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+	overflow-wrap: anywhere;
+	user-select: text;
+}
